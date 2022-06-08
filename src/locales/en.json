@@ -1,0 +1,31 @@
+{
+  "locales": {
+    "en": "English",
+    "ar": "عربي"
+  },
+  "navs": {
+    "home": "Home"
+  },
+
+  "headings": {
+    "mainTitle": "Main Title"
+  },
+
+  "inputs": {
+    "name": "Name",
+    "writeHere": "Write here"
+  },
+
+  "buttons": {
+    "send": "Send",
+    "translate": "Translate"
+  },
+
+  "misc": {
+    "longLocation": "Location",
+    "word": "Word",
+    "context": "Context",
+    "english": "English",
+    "arabic": "Arabic"
+  }
+}

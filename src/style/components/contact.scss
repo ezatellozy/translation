@@ -1,0 +1,152 @@
+.contain-form {
+  background: transparent;
+}
+
+.form-container {
+  border-radius: 385px 0 0 0;
+
+  .form-inputs {
+    .group {
+      position: relative;
+    }
+
+    .inputMaterial {
+      padding: 0px 10px 0px 5px;
+      display: block;
+      border: none;
+      border-bottom: 2px solid;
+      background: transparent;
+      @apply border-white text-lg text-primary;
+
+      &::placeholder {
+        @apply text-primary text-lg font-medium;
+        transition: 0 ease all 0.2s;
+      }
+
+      &:focus {
+        outline: none;
+
+        &::placeholder {
+          @apply text-transparent;
+          transition: 0 ease all 0.2s;
+        }
+      }
+    }
+
+    label {
+      @apply text-primary text-lg font-bold;
+      position: absolute;
+      left: 5px;
+      right: unset;
+      top: 0px;
+      visibility: hidden;
+      transition: 0.2s ease all;
+
+      &:focus {
+        top: -20px;
+        outline: none;
+      }
+    }
+
+    .inputMaterial:focus ~ label,
+    .inputMaterial:valid ~ label {
+      @apply text-base;
+      top: -20px;
+      visibility: visible;
+    }
+  }
+
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  input[type="number"] {
+    -moz-appearance: textfield;
+  }
+
+  .form-btn {
+    @apply text-secondary font-medium text-2xl rounded-xl;
+  }
+
+  .valid-form-btn {
+    background: linear-gradient(109deg, #5666ee 0%, #0516a7 100%);
+    @apply text-white;
+  }
+
+  .invalid-form-btn {
+    @apply text-gray-400 cursor-not-allowed;
+  }
+}
+
+@media (max-width: 549px) {
+  .form-container {
+    border-radius: 0;
+    @apply mb-10;
+    border-left: none;
+  }
+
+  // .contact-us-section {
+  //   background: none;
+  // }
+}
+
+@media (max-width: 375px) {
+}
+
+@media (min-width: 550px) and (max-width: 639px) {
+  .form-container {
+    border-radius: 0;
+    @apply mb-10;
+    border-left: none;
+  }
+
+  // .contact-us-section {
+  //   background: none;
+  // }
+}
+
+@media (min-width: 640px) and (max-width: 767px) {
+  .form-container {
+    border-radius: 0;
+    @apply mb-10;
+    border-left: none;
+  }
+
+  // .contact-us-section {
+  //   background: none;
+  // }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  .contain-form {
+    // background: #fff
+  }
+
+  .contact-information {
+    // background: #f9f9f9;
+  }
+
+  .form-container {
+    border-radius: 0;
+    // @apply mb-10;
+    border-left: none;
+  }
+
+  // .contact-us-section {
+  //   background: none;
+  // }
+}
+
+@media (min-width: 1024px) and (max-width: 1280px) {
+  .form-container {
+    // border-radius: 400px 0 0 0;
+    // @apply mb-10;
+    border-left: none;
+  }
+
+  // .contact-us-section {
+  //   background: none;
+  // }
+}
