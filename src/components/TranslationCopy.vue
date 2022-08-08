@@ -46,7 +46,7 @@
               </p>
               <div
                 @click="
-                  EnglishToArabic = !EnglishToArabic
+                  convertLang()
                   getSuggestions()
                 "
                 class="rounded-full w-12 h-12 bg-primary cursor-pointer flex items-center justify-center mx-12"
@@ -98,70 +98,81 @@
             @getSuggestions="getSuggestions()"
             :suggestions="suggestions"
             :selected="selected"
+            :EnglishToArabic="EnglishToArabic"
           />
 
           <div>
-            <div v-if="translationResult.length || sentensesById || sentenses">
+            <div v-if="translationResult.length">
               <table class="w-full result-content mt-11">
                 <div v-if="translationResult.length">
-                  <tr
-                    class="flex flex-wrap justify-between border-b border-primary md:border-b-0"
-                    v-for="result in translationResult"
-                    :key="result.id"
-                  >
-                    <td
-                      :class="{ 'cursor-pointer': wordGlobal }"
-                      @click="getTranslationById(result.id)"
-                      class="w-full mb-2 pb-2 text-center text-primary font-bold text-lg md:text-xl 2xl:text-3xl px-2 md:w-5/12 md:text-left"
+                  <div v-if="EnglishToArabic">
+                    <tr
+                      class="flex flex-wrap justify-between border-b border-primary md:border-b-0"
+                      v-for="result in translationResult"
+                      :key="result.id"
                     >
-                      {{ result.word }}
-                    </td>
-                  </tr>
-                </div>
-                <div v-if="sentenses">
-                  <tr
-                    class="flex flex-wrap justify-between border-b border-primary md:border-b-0"
-                    v-for="sentense in sentenses"
-                    :key="sentense.id"
-                  >
-                    <td
-                      :class="{ 'cursor-pointer': wordGlobal }"
-                      @click="getTranslationById(sentense.id)"
-                      class="w-full mb-2 pb-2 text-center text-primary font-bold text-lg md:text-xl 2xl:text-3xl px-2 md:w-5/12 md:text-left"
+                      <td
+                        :class="{ 'cursor-pointer': wordGlobal }"
+                        @click="
+                          getTranslationById(result.english_word.id, 'en')
+                        "
+                        class="w-full mb-2 pb-2 text-center text-primary font-bold text-lg md:text-xl 2xl:text-3xl px-2 md:w-5/12 md:text-left"
+                      >
+                        {{ result.english_word.word }}
+                      </td>
+                      <td
+                        class="w-full mb-2 pb-2 text-center text-primary font-bold text-lg md:text-xl 2xl:text-3xl px-2 md:w-5/12 md:text-left"
+                      >
+                        <span
+                          v-for="word in result.arabic_words"
+                          :key="word.id"
+                          class="translation"
+                          :class="{ 'cursor-pointer': wordGlobal }"
+                          @click="getTranslationById(word.id, 'ar')"
+                        >
+                          {{ word.word }}
+                        </span>
+                      </td>
+                    </tr>
+                  </div>
+                  <div v-else>
+                    <tr
+                      class="flex flex-wrap justify-between border-b border-primary md:border-b-0"
+                      v-for="result in translationResult"
+                      :key="result.id"
                     >
-                      {{ sentense.arabic_sentence }}
-                    </td>
-                    <td
-                      @click="getTranslationById(sentense.id)"
-                      :class="{ 'cursor-pointer': wordGlobal }"
-                      class="w-full py-4 text-center font-bold text-lg md:text-xl 2xl:text-3xl pb-2 md:w-5/12 md:text-right"
-                      style="color: #fbc451;"
-                    >
-                      {{ sentense.english_sentence }}
-                    </td>
-                  </tr>
-                </div>
-                <div v-if="sentensesById">
-                  <tr
-                    class="flex flex-wrap justify-between border-b border-primary md:border-b-0"
-                  >
-                    <td
-                      class="w-full mb-2 pb-2 text-center text-primary font-bold text-lg md:text-xl 2xl:text-3xl px-2 md:w-5/12 md:text-left"
-                    >
-                      {{ sentensesById.arabic_sentence }}
-                    </td>
-                    <td
-                      class="w-full py-4 text-center font-bold text-lg md:text-xl 2xl:text-3xl pb-2 md:w-5/12 md:text-right"
-                      style="color: #fbc451;"
-                    >
-                      {{ sentensesById.english_sentence }}
-                    </td>
-                  </tr>
+                      <td
+                        :class="{ 'cursor-pointer': wordGlobal }"
+                        @click="getTranslationById(result.arabic_word.id, 'ar')"
+                        class="w-full mb-2 pb-2 text-center text-primary font-bold text-lg md:text-xl 2xl:text-3xl px-2 md:w-5/12 md:text-left"
+                      >
+                        {{ result.arabic_word.word }}
+                      </td>
+                      <td
+                        class="w-full mb-2 pb-2 text-center text-primary font-bold text-lg md:text-xl 2xl:text-3xl px-2 md:w-5/12 md:text-left"
+                      >
+                        <span
+                          v-for="word in result.english_words"
+                          :key="word.id"
+                          class="translationar"
+                          :class="{ 'cursor-pointer': wordGlobal }"
+                          @click="getTranslationById(word.id, 'en')"
+                        >
+                          {{ word.word }}
+                        </span>
+                      </td>
+                    </tr>
+                  </div>
                 </div>
               </table>
             </div>
           </div>
           <sentenses-resault v-if="sentenses.length" :sentenses="sentenses" />
+          <sentenses-resault
+            v-if="sentensesById"
+            :sentenses="sentensesById"
+            byId="true"
+          />
         </div>
       </div>
     </div>
@@ -183,11 +194,19 @@ export default {
       suggestions: [],
       searchInput: '',
       translationResult: [],
+      newData: [],
       sentenses: [],
       sentensesById: null,
     }
   },
   methods: {
+    convertLang() {
+      this.EnglishToArabic = !this.EnglishToArabic
+      this.suggestions = []
+      this.translationResult = []
+      this.newData = []
+      this.sentenses = []
+    },
     getCategories() {
       this.axios.get('categories').then((data) => {
         this.categories = data.data.data
@@ -199,7 +218,13 @@ export default {
       this.category = category.name
       this.categoryId = category.id
     },
-    getResault(dictionary, query, qInput, dataResault, category_id = null) {
+    async getResault(
+      dictionary,
+      query,
+      qInput,
+      dataResault,
+      category_id = null,
+    ) {
       let url
       query != undefined
         ? (url = `${dictionary}?${query}=${qInput}&per_page=10`)
@@ -207,12 +232,48 @@ export default {
       if (category_id !== 0) {
         url += `&category=${category_id}`
       }
-      this.axios.get(url).then((data) => {
+      await this.axios.get(url).then((data) => {
         query != undefined
           ? (this[dataResault] = data.data.data)
           : (this[dataResault] = data.data.sentence_dictionary)
-        console.log(this[dataResault])
       })
+      console.log(this.sentensesById)
+
+      if (dataResault == 'suggestions') return
+
+      if (this.EnglishToArabic && this.selected == 'word') {
+        this.newData = []
+        this.translationResult.map((el) => {
+          let obj = {}
+          const found = this.newData.find(
+            (element) => element.english_word.id === el.english_word.id,
+          )
+          if (found) {
+            found.arabic_words.push(el.arabic_word)
+          } else {
+            obj['english_word'] = el.english_word
+            obj['arabic_words'] = [el.arabic_word]
+            this.newData.push(obj)
+            this.translationResult = this.newData
+          }
+        })
+      } else if (this.EnglishToArabic == false && this.selected == 'word') {
+        this.newData = []
+        this.translationResult.map((el) => {
+          let obj = {}
+          const found = this.newData.find(
+            (element) => element.arabic_word.id === el.arabic_word.id,
+          )
+          if (found) {
+            found.english_words.push(el.arabic_word)
+          } else {
+            obj['english_words'] = [el.english_word]
+            obj['arabic_word'] = el.arabic_word
+            this.newData.push(obj)
+            this.translationResult = this.newData
+          }
+        })
+      }
     },
     getSuggestions() {
       if (this.searchInput == '') {
@@ -239,7 +300,6 @@ export default {
 
     getTranslation() {
       if (this.searchInput == '') {
-        this.searchInput = ''
         this.suggestions = ''
         return
       }
@@ -253,26 +313,35 @@ export default {
         this.selected == 'word' ? 'translationResult' : 'sentenses',
         this.categoryId,
       )
-      this.searchInput = ''
       this.suggestions = ''
     },
-    getTranslationById(word) {
+    getTranslationById(word, lang) {
       if (!this.wordGlobal) {
-        this.searchInput = ''
         this.suggestions = ''
         return
       }
+
       this.translationResult = []
       this.sentenses = []
       this.sentensesById = null
       if (this.selected == 'word') {
-        this.getResault(
-          'word-dictionaries',
-          this.EnglishToArabic ? 'englishid' : 'arabicid',
-          word,
-          'translationResult',
-          this.categoryId,
-        )
+        if (lang) {
+          this.getResault(
+            'word-dictionaries',
+            lang == 'en' ? 'englishid' : 'arabicid',
+            word,
+            'translationResult',
+            this.categoryId,
+          )
+        } else {
+          this.getResault(
+            'word-dictionaries',
+            this.EnglishToArabic ? 'englishid' : 'arabicid',
+            word,
+            'translationResult',
+            this.categoryId,
+          )
+        }
       } else {
         this.getResault(
           'sentence-dictionaries',
@@ -282,7 +351,6 @@ export default {
           this.categoryId,
         )
       }
-      this.searchInput = ''
       this.suggestions = ''
     },
   },
@@ -318,6 +386,18 @@ export default {
     @media (max-width: 768px) {
       content: initial;
     }
+  }
+}
+span.translation {
+  margin: 0 5px;
+  &:not(:last-child) {
+    @apply border-l-4 border-primary;
+  }
+}
+span.translationar {
+  margin: 0 5px;
+  &:not(:last-child) {
+    @apply border-l-0 border-r-2 border-primary;
   }
 }
 </style>

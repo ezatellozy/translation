@@ -15,9 +15,9 @@
               v-if="selected === 'word'"
               class="cursor-pointer text-sm border-b"
             >
-              <span @click="getTranslationById(suggestion.id)">{{
-                suggestion.word
-              }}</span>
+              <span @click="getTranslationById(suggestion.id)">
+                {{ suggestion.word }}
+              </span>
             </p>
             <p
               v-else
@@ -25,8 +25,8 @@
               @click="getTranslationById(suggestion.id)"
             >
               <span v-if="EnglishToArabic">
-                {{ suggestion.arabic_sentence }}</span
-              >
+                {{ suggestion.arabic_sentence }}
+              </span>
               <span v-else>{{ suggestion.english_sentence }}</span>
             </p>
           </li>
@@ -37,10 +37,10 @@
       <div class="flex justify-center w-full mt-20">
         <button
           class="py-4 px-8 rounded-xl text-white font-medium text-3xl"
-          style="background: linear-gradient(109deg, #5666ee 0%, #0516a7 100%)"
+          style="background: linear-gradient(109deg, #5666ee 0%, #0516a7 100%);"
           @click="getTranslation"
         >
-          {{ $t("buttons.translate") }}
+          {{ $t('buttons.translate') }}
         </button>
       </div>
     </div>
@@ -49,19 +49,19 @@
 
 <script>
 export default {
-  props: ["suggestions", "selected"],
+  props: ['suggestions', 'selected', 'EnglishToArabic'],
   methods: {
     getTranslationById(id) {
-      this.$emit("getTranslationById", id);
+      this.$emit('getTranslationById', id)
     },
     getTranslation() {
-      this.$emit("getTranslation");
+      this.$emit('getTranslation')
     },
     getSuggestions() {
-      this.$emit("getSuggestions");
+      this.$emit('getSuggestions')
     },
   },
-};
+}
 </script>
 
 <style></style>

@@ -33,7 +33,7 @@
                       placeholder="Full name  "
                     />
 
-                    <label>Full name </label>
+                    <label>Full name</label>
                   </div>
 
                   <div
@@ -137,7 +137,7 @@
         <div
           class="bg-white card-shadow w-full h-2/3 sm:pb-0 pb-11 mt-16 rounded-r-3xl"
         >
-          <div class="mx-auto" style="width: fit-content">
+          <div class="mx-auto" style="width: fit-content;">
             <div class="flex items-center pb-6 pt-11">
               <div
                 class="text-2xl xs:text-4xl lg:text-2xl xl:text-4xl text-primary mr-2"
@@ -146,8 +146,8 @@
               </div>
 
               <p class="font-bold text-lg">
-                <a :href="`mailto:${settings.contacts_email}`"
-                  >{{ settings.contacts_email }}
+                <a :href="`mailto:${settings.contacts_email}`">
+                  {{ settings.contacts_email }}
                 </a>
               </p>
             </div>
@@ -190,7 +190,8 @@
               :href="`${settings.contacts_twitter} `"
               target="_blank"
               class="text-2xl xs:text-4xl lg:text-2xl xl:text-4xl text-primary"
-              ><font-awesome-icon :icon="['fab', 'twitter']" />
+            >
+              <font-awesome-icon :icon="['fab', 'twitter']" />
             </a>
             <a
               :href="`${settings.contacts_instagram} `"
@@ -210,44 +211,42 @@ export default {
   data() {
     return {
       settings: [],
-      name: "",
-      email: "",
-      phone: "",
-      message: "",
-    };
+      name: '',
+      email: '',
+      phone: '',
+      message: '',
+    }
   },
   methods: {
     submit() {
-      if (!this.phone.startsWith("+2") || !this.phone.startsWith("002")) {
-        this.phone = `+2${this.phone}`;
+      if (!this.phone.startsWith('+2') || !this.phone.startsWith('002')) {
+        this.phone = `+2${this.phone}`
       }
       this.axios
-        .post("contacts", {
+        .post('contacts', {
           name: this.name,
           email: this.email,
           phone: this.phone,
           message: this.message,
         })
         .then(() => {
-          this.$toasted.show(" successfully added..!");
+          this.$toasted.show(' successfully added..!')
 
-          this.$refs.form.reset();
+          this.$refs.form.reset()
           // this.name = "";
           // this.email = "";
           // this.phone = "";
-          this.message = "";
-        });
+          this.message = ''
+        })
     },
     fetchSettings() {
-      this.axios.get("settings").then(({ data }) => {
-        this.settings = data.settings;
-        console.log(this.settings);
-        console.log(data);
-      });
+      this.axios.get('settings').then(({ data }) => {
+        this.settings = data.settings
+      })
     },
   },
   mounted() {
-    this.fetchSettings();
+    this.fetchSettings()
   },
-};
+}
 </script>
